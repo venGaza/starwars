@@ -26,6 +26,9 @@ public:
     
     //Getters
     bool getExitGame();             //Return the gameOver bool to exit game
+
+    //Setters
+    void resetGame();               //Resets the gameOver variable to restart game
     
 private:
     //Functions
@@ -41,7 +44,6 @@ private:
     void kyloLoss();                //If Kylo loses, it prints message and game continues
     void winMessage();              //End of game message if user reaches Launch Bay
     void pause();                   //Pauses the game
-    
     
     //Variables
     string playerName;

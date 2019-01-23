@@ -103,6 +103,18 @@ void Game::menu() {
 bool Game::getExitGame() {
     return exitGame;
 }
+
+
+/*
+ * Function: resetGame
+ * Usage: resetGame()
+ * -------------------------
+ * This is a member function for the Game class. This function resets the gameOver
+ * variable so the player can restart the game.
+ */
+void Game::resetGame() {
+    gameOver = false;
+}
 /****************************************************************************************************
  *                                     PRIVATE FUNCTIONS                                            *
  ***************************************************************************************************/
@@ -329,7 +341,7 @@ void Game::winMessage() {
  * Function: pause
  * Usage: pause()
  * -------------------------
- * This is a member function for the Zoo class. This function pauses the program.
+ * This is a member function for the Game class. This function pauses the program.
  */
 void Game::pause() {
     cout << "Press enter to continue" << endl;

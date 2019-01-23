@@ -22,6 +22,7 @@ int main() {
     Game game;
     while (!game.getExitGame()) {
         game.menu();
+        game.resetGame();
     }
     
     cout << "Have a great holiday and may the force be with you! Make sure to check out "

@@ -1,62 +1,93 @@
-$(CXX) = g++
-CFLAGS = -std=c++0x
+#
+# Makefile for StarWars game
+#
 
-output: main.o getInteger.o randomNumber.o validate.o Game.o Items.o Map.o Space.o StartSpace.o Corridor.o DetentionBlock.o CoreReactor.o Infirmary.o Armory.o Door.o LaunchBay.o KyloSpace.o SnokeSpace.o
-	g++ main.o getInteger.o randomNumber.o validate.o Game.o Items.o Map.o Space.o StartSpace.o Corridor.o DetentionBlock.o CoreReactor.o Infirmary.o Armory.o Door.o LaunchBay.o KyloSpace.o SnokeSpace.o -o StarWars
+# It is likely that default C compiler is already gcc, but explicitly
+# set, just to be sure
+CC          = g++
 
-main.o: main.cpp
-	g++ -c  -std=c++0x main.cpp	
+# The Target Binary Program
+TARGET      = StarWars
 
-getInteger.o: getInteger.cpp
-	g++ -c -std=c++0x getInteger.cpp
+# The Directories, Source, Includes, Objects, Binary and Resources
+SRCDIR      = src
+INCDIR      = inc
+OBJDIR      = obj
+TARGETDIR   = bin
+RESDIR      = res
+SRCEXT      = cpp
+DEPEXT      = d
+OBJEXT      = o
 
-randomNumber.o: randomNumber.cpp
-	g++ -c -std=c++0x randomNumber.cpp
+# Flags, Libraries and Includes
+# The CFLAGS variable sets compile flags for g++:
+# -g				Compile with debug information
+# -Wall				Give verbose compiler warnings		
+# -std=c++0x		Use the C++0x standard definition language
+CFLAGS      = -g -Wall -std=c++0x
 
-validate.o: validate.cpp
-	g++ -c -std=c++0x validate.cpp
+# The LDFLAGS variable sets flags for linker
+LFLAGS = 
 
-Game.o: Game.cpp
-	g++ -c -std=c++0x Game.cpp
+# Libraries and Includes
+# -I$(INCDIR)		Tells compiler where to look for include files 
+LIB         = 
+INC         = -I$(INCDIR)
+INCDEP      = -I$(INCDIR)
 
-Items.o: Items.cpp
-	g++ -c -std=c++0x Items.cpp
+#---------------------------------------------------------------------------------
+#DO NOT EDIT BELOW THIS LINE
+#---------------------------------------------------------------------------------
 
-Map.o: Map.cpp
-	g++ -c -std=c++0x Map.cpp
+# Source files are detected via shell find command
+SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS     := $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
-Space.o: Space.cpp
-	g++ -c -std=c++0x Space.cpp
+# Defauilt Make
+all: resources $(TARGET)
 
-StartSpace.o: StartSpace.cpp
-	g++ -c -std=c++0x StartSpace.cpp
+# Remake (Cleaner + Make)
+remake: cleaner all
 
-Corridor.o: Corridor.cpp
-	g++ -c -std=c++0x Corridor.cpp
+# Copy Resources from Resources Directory to Target Directory
+resources: directories
+	#@cp $(RESDIR)/* $(TARGETDIR)/
 
-DetentionBlock.o: DetentionBlock.cpp
-	g++ -c -std=c++0x DetentionBlock.cpp
+# Make the Directories
+directories:
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(OBJDIR)
 
-CoreReactor.o: CoreReactor.cpp
-	g++ -c -std=c++0x CoreReactor.cpp
-
-Infirmary.o: Infirmary.cpp
-	g++ -c -std=c++0x Infirmary.cpp
-
-Armory.o: Armory.cpp
-	g++ -c -std=c++0x Armory.cpp
-
-Door.o: Door.cpp
-	g++ -c -std=c++0x Door.cpp
-
-LaunchBay.o: LaunchBay.cpp
-	g++ -c -std=c++0x LaunchBay.cpp
-
-KyloSpace.o: KyloSpace.cpp
-	g++ -c -std=c++0x KyloSpace.cpp
-
-SnokeSpace.o: SnokeSpace.cpp
-	g++ -c -std=c++0x SnokeSpace.cpp
-
+# Clean only Objects
 clean:
-	rm *.o StarWars
+	@$(RM) -rf $(OBJDIR)
+
+# Full Clean, Objects and Binaries
+cleaner: clean
+	@$(RM) -rf $(TARGETDIR)
+
+# Pull in dependency info for *existing* .o files
+-include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+
+# Link
+$(TARGET): $(OBJECTS)
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+
+# Compile project and automatically generate a dependency file for each 
+# object This means that modification of headers and inline files will trigger 
+# recompilation of files which are dependent.
+$(OBJDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(OBJDIR)/$*.$(DEPEXT)
+	@cp -f $(OBJDIR)/$*.$(DEPEXT) $(OBJDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(OBJDIR)/$*.$(OBJEXT):|' < $(OBJDIR)/$*.$(DEPEXT).tmp > $(OBJDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(OBJDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(OBJDIR)/$*.$(DEPEXT)
+	@rm -f $(OBJDIR)/$*.$(DEPEXT).tmp
+
+# Non-File Targets
+.PHONY: all remake clean cleaner resources
+
+# Sources
+# https://stackoverflow.com/questions/5178125/how-to-place-object-files-in-separate-subdirectory
+# http://scottmcpeak.com/autodepend/autodepend.html

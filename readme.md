@@ -1,6 +1,6 @@
 # StarWars Adventure
 
-This is a CLI rooms program built in C++ based in the Star Wars universe. The game makes use to text based commands to allow the user to move through the gameworld. The user has just crash landed in a strange place and realize he/she has a limited time to escape an impending dark force. Along the way, the user will have a opportunities to discover powerful items which may aid in their escape. Do you have what it takes, or will you succumb to the danger that lurk?     
+This is a CLI rooms program built in C++ based in the Star Wars universe. The game makes use to text based commands to allow the user to move through the gameworld. The user has just crash landed in a strange place and realize he/she has a limited time to escape an impending dark force. Along the way, the user will have a opportunities to discover powerful items which may aid in their escape. Do you have what it takes, or will you succumb to the danger that lurks?     
 
 ## Getting Started
 

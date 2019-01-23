@@ -43,7 +43,7 @@ INCDEP      = -I$(INCDIR)
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
-# Defauilt Make
+# Default Make
 all: resources $(TARGET)
 
 # Remake (Cleaner + Make)
@@ -74,7 +74,7 @@ $(TARGET): $(OBJECTS)
 	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
 
 # Compile project and automatically generate a dependency file for each 
-# object This means that modification of headers and inline files will trigger 
+# object. This means that modification of headers and inline files will trigger 
 # recompilation of files which are dependent.
 $(OBJDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
